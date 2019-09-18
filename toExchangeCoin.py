@@ -1,6 +1,9 @@
 #купи продай и тд
 
-import telegramApi
+import psycopg2
+from qiwiApi import send_p2p
+from telegramApi import bot
+
 
 
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
@@ -32,7 +35,7 @@ def to_exchange_coin(message):
 
             bot.send_message(message.chat.id, " username продает " + str(row[3]) + " в количеcтве " + str(
                 row[1]) + " по цене за монету " + str(row[2]) + " Номер для покупки:  " + row[4] + "  " + b,
-                             reply_markup=keyboard2)
+                             )
 
 
     except (Exception, psycopg2.Error) as error:

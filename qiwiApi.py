@@ -1,5 +1,4 @@
-import telebot
-import psycopg2
+from telegramApi import bot
 
 import requests
 import json
