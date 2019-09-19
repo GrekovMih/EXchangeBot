@@ -7,6 +7,9 @@ import time
 
 # Перевод на QIWI Кошелек
 def send_p2p(my_login, api_access_token, to_qw, comment, sum_p2p, message):
+    
+    bot.send_message(message.chat.id, ' send_p2p ')
+
     s = requests.Session()
     s.headers = {'content-type': 'application/json'}
     s.headers['authorization'] = 'Bearer ' + api_access_token

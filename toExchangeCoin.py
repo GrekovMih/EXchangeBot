@@ -9,6 +9,8 @@ from telegramApi import bot
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
 def to_exchange_coin(message):
 
+    bot.send_message(message.chat.id, ' to_exchange_coin ')
+
 
     #переделаю я коннекты, переделаю
     try:
@@ -62,7 +64,7 @@ def to_exchange_coin(message):
         bot.send_message(message.chat.id, 'Введите количество монет')
         # bot.register_next_step_handler(message, numberforBuy, get_number)
 
-        bot.register_next_step_handler(message, lambda msg: get_number(numberforBuy, msg))
+        bot.register_next_step_handler(message, lambda msg: request_to_qiwi(numberforBuy, msg))
 
 
 #Добавить выбор платежной системы для покупки, qiwi в отдельный модуль и другие систмеы платежные(уточнить какие)  (вывод в кклаве будет, наверное)
@@ -129,7 +131,9 @@ def to_exchange_coin(message):
             sum_p2p = int(countCoin) * int(price)
             print("sum_p2p" + str(sum_p2p))
 
-            qiwi = send_p2p(my_login, api_access_token, telephone, comment, sum_p2p, message)
+            to_qw = telephone
+
+            status = send_p2p('', api_access_token, telephone, '', sum_p2p, message)
 
             # ok или трабл
 
@@ -167,6 +171,6 @@ def to_exchange_coin(message):
 
     con.close()
 
-    bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца', reply_markup=keyboard1)
+    bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
 
         

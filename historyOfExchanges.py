@@ -6,6 +6,8 @@ from telegramApi import bot
 
 def history_of_exchanges(message):
 
+    bot.send_message(message.chat.id, ' history_of_exchanges ')
+
 
     #переделаю я коннекты, переделаю
     try:
