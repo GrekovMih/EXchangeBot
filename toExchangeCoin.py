@@ -17,13 +17,12 @@ def to_exchange_coin(message):
 
     bot.send_message(message.chat.id, ' Обмен валюты ')
 
-    for countcoins, price, text, telephone in session.query(CryptoSale.countcoins, CryptoSale.price,
-                                                                    CryptoSale.text, CryptoSale.telephone,
-                                                                    ):
+    for id, count_coins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.count_coins, CryptoSale.price,
+                                                                    CryptoSale.text, CryptoSale.telephone):
         print("nothing")
-        print(countcoins, price, text, telephone )
+        print(count_coins, price, text, telephone )
 
-        bot.send_message(message.chat.id, " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + "Монета -"+ str(text) +" Номер для покупки:  " + str(telephone) + "  " ,
+        bot.send_message(message.chat.id, " В количеcтве " + str(count_coins) + " по цене за монету " + str(price) + "Монета -"+ str(text) +" Номер для покупки:  " + str(telephone) + "  " ,
                  )
 
 
@@ -57,25 +56,25 @@ def to_exchange_coin(message):
 
         print(numberforBuy)
 
-        for keyqiwi, idtelegram in session.query(UserBotInfo.keyqiwi, UserBotInfo.idtelegram,
+        for keyqiwi, id_telegram in session.query(UserBotInfo.keyqiwi, UserBotInfo.id_telegram,
 
-                                                                ).filter(UserBotInfo.idtelegram==str(message.from_user.id)):
+                                                                ).filter(UserBotInfo.id_telegram==str(message.from_user.id)):
             print("nothing")
-            print(keyqiwi, idtelegram)
+            print(keyqiwi, id_telegram)
 
             api_access_token = api_access_token
 
-        for countcoins, price, text, telephone in session.query(CryptoSale.countcoins, CryptoSale.price,
+        for id, count_coins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.count_coins, CryptoSale.price,
                                                                 CryptoSale.text, CryptoSale.telephone,
                                                                 ).filter(CryptoSale.id == str(numberforBuy)):
             print("nothing")
-            print(countcoins, price, text, telephone)
+            print(count_coins, price, text, telephone)
 
             bot.send_message(message.chat.id,
-                             " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + "Монета -" + str(
+                             " В количеcтве " + str(count_coins) + " по цене за монету " + str(price) + "Монета -" + str(
                                  text) + " Номер для покупки:  " + str(telephone) + "  ",
                              )
-            countCoinAvailable = countcoins
+            countCoinAvailable = count_coins
 
 
         countCoin = message.text
@@ -95,7 +94,7 @@ def to_exchange_coin(message):
             # ok или трабл
 
             if (status == 'ok'):
-                newDeal = BotDeals(countcoins, sum_p2p, telephone, idtelegram, text)
+                newDeal = BotDeals(count_coins, sum_p2p, telephone, id_telegram, text)
                 session.add(newDeal)
                 updateDeal = update(BotDeals).where(BotDeals.id == numberforBuy).values(countCoin=countCoinAvailable - countCoin )
                 bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')

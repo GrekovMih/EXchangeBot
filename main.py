@@ -15,7 +15,7 @@ def start_message(message):
     bot.send_message(message.chat.id, ' working ')
 
 
-keyboardMain = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+keyboardMain = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 #keyboardMain.row('/All', '/Key') #Произвести обмен, мои обмены, настройки, ифнормация
 keyboardMain.row('Произвести обмен') #некошерные команды, а просто текст. Но с красивой клавой можно только так
 keyboardMain.row('Мои обмены')
@@ -38,8 +38,10 @@ def send_text(message):
     if message.text == 'Информация':
         bot.send_message(message.chat.id, ' Информация ')
         get_informations(message)
+
     elif message.text == 'Курсы обмена':
         get_exchange_rates(message)
+
 
 
 

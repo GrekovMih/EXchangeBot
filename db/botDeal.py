@@ -17,24 +17,24 @@ Base = declarative_base()
 class BotDeals(Base):
     __tablename__ = 'botdeal'
     id = Column(Integer, primary_key=True)
-    countcoins = Column(Integer)
-    sumdeal = Column(Integer)
+    count_coins = Column(Integer)
+    sum_deal = Column(Integer)
     telephone = Column(String)
-    idtelegram = Column(String)
+    id_telegram = Column(String)
     text = Column(String)
 
 
-    def __init__(self, countcoins, sumdeal, telephone, idtelegram, text):
-        self.countcoins = countcoins
-        self.sumdeal = sumdeal
+    def __init__(self, count_coins, sum_deal, telephone, id_telegram, text):
+        self.count_coins = count_coins
+        self.sum_deal = sum_deal
         self.telephone = telephone
-        self.idtelegram = idtelegram
+        self.id_telegram = id_telegram
         self.text = text
 
 
     '''
     def __repr__(self):
-        return "<User('%s','%s', '%s')>" % (self.countcoins, self.sumdeal, self.telephone, self.idtelegram, self.text)
+        return "<User('%s','%s', '%s')>" % (self.count_coins, self.sum_deal, self.telephone, self.id_telegram, self.text)
     '''
 
 

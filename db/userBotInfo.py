@@ -1,4 +1,4 @@
 class UserBotInfo(object):
-    def __init__(self, keyqiwi, idtelegram):
+    def __init__(self, keyqiwi, id_telegram):
         self.keyqiwi = keyqiwi
-        self.idtelegram = idtelegram
+        self.id_telegram = id_telegram

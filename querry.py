@@ -19,11 +19,11 @@ for r in result_set:
 '''
 # bot.send_message(message.chat.id, result_set, )
 
-for countcoins, sumdeal, telephone, idtelegram in session.query(BotDeals.countcoins, BotDeals.sumdeal,
-                                                                      BotDeals.telephone, BotDeals.idtelegram,
+for count_coins, sum_deal, telephone, id_telegram in session.query(BotDeals.count_coins, BotDeals.sum_deal,
+                                                                      BotDeals.telephone, BotDeals.id_telegram,
                                                                       ):
     print("nothing")
-    print(countcoins, sumdeal, telephone, idtelegram)
+    print(count_coins, sum_deal, telephone, id_telegram)
 
 '''
 #переделаю я коннекты, переделаю
@@ -41,10 +41,10 @@ try:
     print("Произведенные операции")
     for row in mobile_records:
         print("Id = ", row[0],)
-        print("countcoins = ", row[1])
-        print("sumdeal  = ", row[2], "\n")
+        print("count_coins = ", row[1])
+        print("sum_deal  = ", row[2], "\n")
         print("telephone  = ", row[3], "\n")
-        print("idtelegram  = ", row[4], "\n")
+        print("id_telegram  = ", row[4], "\n")
         print("text  = ", row[5], "\n")
         command = '/Buy' + str(row[0])
         b = command.split()
