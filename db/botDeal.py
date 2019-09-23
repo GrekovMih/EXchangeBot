@@ -21,12 +21,16 @@ class BotDeals(Base):
     sumdeal = Column(Integer)
     telephone = Column(String)
     idtelegram = Column(String)
+    text = Column(String)
+
 
     def __init__(self, countcoins, sumdeal, telephone, idtelegram, text):
         self.countcoins = countcoins
         self.sumdeal = sumdeal
         self.telephone = telephone
         self.idtelegram = idtelegram
+        self.text = text
+
 
     '''
     def __repr__(self):

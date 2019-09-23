@@ -1,5 +1,6 @@
 class CryptoSale(object):
-    def __init__(self, countcoins, price, text, telephone):
+    def __init__(self, id, countcoins, price, text, telephone):
+        self.id = id
         self.countcoins = countcoins
         self.price = price
         self.text = text

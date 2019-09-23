@@ -4,50 +4,32 @@ import psycopg2
 from qiwiApi import send_p2p
 from telegramApi import bot
 
+from sqlalchemy import create_engine
+#from db.botDeal import BotDeal
+from sqlalchemy.orm import sessionmaker
+from db.cryptoSale import CryptoSale
+from db.userBotInfo import UserBotInfo
+
+from db.settings import *
+
+
+
+
 
 
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
 def to_exchange_coin(message):
 
-    bot.send_message(message.chat.id, ' to_exchange_coin ')
+    bot.send_message(message.chat.id, ' Обмен валюты ')
 
+    for countcoins, price, text, telephone in session.query(CryptoSale.countcoins, CryptoSale.price,
+                                                                    CryptoSale.text, CryptoSale.telephone,
+                                                                    ):
+        print("nothing")
+        print(countcoins, price, text, telephone )
 
-    #переделаю я коннекты, переделаю
-    try:
-        connection = psycopg2.connect(user="postgres",
-                                      password="45091847",
-                                      host="127.0.0.1",
-                                      port="5432",
-                                      database="cracc")
-        cursor = connection.cursor()
-        postgreSQL_select_Query = "SELECT * FROM public.cryptosale;"
-        cursor.execute(postgreSQL_select_Query)
-        mobile_records = cursor.fetchall()
-
-        print("Предложения по продаже крипты")
-        for row in mobile_records:
-            print("Id = ", row[0],)
-            print("countcoins = ", row[1])
-            print("price  = ", row[2], "\n")
-            print("nameCoins  = ", row[3], "\n")
-            print("number  = ", row[4], "\n")
-            command = '/Buy' + str(row[0])
-            b = command.split()
-            b = ''.join(b)
-
-            bot.send_message(message.chat.id, " username продает " + str(row[3]) + " в количеcтве " + str(
-                row[1]) + " по цене за монету " + str(row[2]) + " Номер для покупки:  " + row[4] + "  " + b,
-                             )
-
-
-    except (Exception, psycopg2.Error) as error:
-        print ("Error while fetching data from PostgreSQL", error)
-    finally:
-        # closing database connection.
-        if (connection):
-            cursor.close()
-            connection.close()
-            print("PostgreSQL connection is closed")
+        bot.send_message(message.chat.id, " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + "Монета -"+ str(text) +" Номер для покупки:  " + str(telephone) + "  " ,
+                 )
 
 
 
@@ -80,46 +62,26 @@ def to_exchange_coin(message):
 
         print(numberforBuy)
 
-        try:
-            connection = psycopg2.connect(user="postgres",
-                                          password="45091847",
-                                          host="127.0.0.1",
-                                          port="5432",
-                                          database="cracc")
-            cursor = connection.cursor()
-            postgreSQL_select_Query = "SELECT * FROM public.userbotinfo where public.userbotinfo.idtelegram = '" + str(
-                message.from_user.id) + "';"
-            cursor.execute(postgreSQL_select_Query)
-            mobile_records = cursor.fetchall()
+        for keyqiwi, idtelegram in session.query(UserBotInfo.keyqiwi, UserBotInfo.idtelegram,
 
-            for row in mobile_records:
-                api_access_token = row[0]
-            #   print("api_access_token" + api_access_token)
+                                                                ).filter(UserBotInfo.idtelegram==str(message.from_user.id)):
+            print("nothing")
+            print(keyqiwi, idtelegram)
 
-            cursor = connection.cursor()
-            postgreSQL_select_Query = "SELECT * FROM public.cryptosale where public.cryptosale.id = '" + str(
-                numberforBuy) + "';"
-            cursor.execute(postgreSQL_select_Query)
-            mobile_records = cursor.fetchall()
+            api_access_token = api_access_token
 
-            for row in mobile_records:
-                countCoinAvailable = row[1]
-                price = row[2]
-                telephone = row[3]
-            #   print("countCoinAvailable" + countCoinAvailable)
-            #  print("price" + price)
+        for countcoins, price, text, telephone in session.query(CryptoSale.countcoins, CryptoSale.price,
+                                                                CryptoSale.text, CryptoSale.telephone,
+                                                                ).filter(CryptoSale.id == str(numberforBuy)):
+            print("nothing")
+            print(countcoins, price, text, telephone)
 
+            bot.send_message(message.chat.id,
+                             " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + "Монета -" + str(
+                                 text) + " Номер для покупки:  " + str(telephone) + "  ",
+                             )
+            countCoinAvailable = countcoins
 
-        except (Exception, psycopg2.Error) as error:
-            print("Error while fetching data from PostgreSQL", error)
-        finally:
-            # closing database connection.
-            if (connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed")
-
-        # to_qw = numberforBuy
 
         countCoin = message.text
 
@@ -138,29 +100,12 @@ def to_exchange_coin(message):
             # ok или трабл
 
             if (status == 'ok'):
-                con = psycopg2.connect(
-                    user="postgres",
-                    password="45091847",
-                    host="127.0.0.1",
-                    port="5432",
-                    database="cracc"
-                )
-
-                print("Database opened successfully")
-                cur = con.cursor()
-                cur.execute(
-                    "INSERT INTO  botdeal VALUES  ('" + str(countCoin) + "', '"
-                    + str(sum_p2p) + to_qw + str(message.from_user.id) + "');"
-                )
-
-                con.commit()
-                print("Record inserted successfully")
-
-                con.close()
+                newDeal = BotDeals(countcoins, sum_p2p, telephone, idtelegram, text)
+                session.add(newDeal)
 
 
-    ''' 
-    уменьшать в таблице доступные монетки
+     
+    #уменьшать в таблице доступные монетки
                 cur = con.cursor()
                 cur.execute(
                     "UPDATE  botdeal VALUES  ('" + str(countCoin) + "', '"
@@ -170,8 +115,7 @@ def to_exchange_coin(message):
                 con.commit()
                 print("Record inserted successfully")
 
-    '''
-
+                session.commit()
 
     bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
 

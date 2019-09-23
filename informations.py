@@ -18,6 +18,14 @@ def get_informations(message):
     keyboardMain.row('О нас')  # некошерные команды, а просто текст. Но с красивой клавой можно только так
     keyboardMain.row('Поддержка')
 
+    @bot.message_handler(content_types=['text'])
+    def send_text(message):
+        if message.text == 'О нас':
+            bot.send_message(message.chat.id, ' Crocc - это калево ')
+        elif message.text == 'Поддержка':
+            bot.send_message(message.chat.id, ' Брат за брата ')
+
+
 
 
 
