@@ -156,6 +156,9 @@ def to_exchange_coin(message):
                 con.commit()
                 print("Record inserted successfully")
 
+                con.close()
+
+
     ''' 
     уменьшать в таблице доступные монетки
                 cur = con.cursor()
@@ -169,7 +172,6 @@ def to_exchange_coin(message):
 
     '''
 
-    con.close()
 
     bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
 

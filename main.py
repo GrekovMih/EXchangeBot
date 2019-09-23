@@ -12,37 +12,34 @@ from toExchangeCoin import to_exchange_coin
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, 'Добро пожаловать в телеграм бот cracc', reply_markup=keyboardMain)
+    bot.send_message(message.chat.id, ' working ')
 
 
 keyboardMain = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 #keyboardMain.row('/All', '/Key') #Произвести обмен, мои обмены, настройки, ифнормация
-keyboardMain.row('Произвести обмен' ) #некошерные команды, а просто текст. Но с красивой клавой можно только так
-keyboardMain.row('Мои обмены' )
-keyboardMain.row( 'Настройки' )
-keyboardMain.row('информация' )
-keyboardMain.row('Курсы обмена' )
-
+keyboardMain.row('Произвести обмен') #некошерные команды, а просто текст. Но с красивой клавой можно только так
+keyboardMain.row('Мои обмены')
+keyboardMain.row('Настройки')
+keyboardMain.row('Информация')
+keyboardMain.row('Курсы обмена')
 
 # allTextCommand обработка всех текстовых команд
 
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
-    if message.text.lower() == 'Произвести обмен':
+    if message.text == 'Произвести обмен':
         to_exchange_coin(message)
-    elif message.text.lower() == 'Мои обмены':
+    elif message.text == 'Мои обмены':
+        bot.send_message(message.chat.id, ' Мои обмены ')
         history_of_exchanges(message)
-    elif message.text.lower() == 'Настройки':
+    elif message.text == 'Настройки':
         change_settings(message)
-    if message.text.lower() == 'Информация':
+    if message.text == 'Информация':
+        bot.send_message(message.chat.id, ' Информация ')
         get_informations(message)
-    elif message.text.lower() == 'Курсы обмена':
+    elif message.text == 'Курсы обмена':
         get_exchange_rates(message)
-
-
-
-
-
 
 
 
