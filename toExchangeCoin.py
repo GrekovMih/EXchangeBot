@@ -3,18 +3,13 @@
 import psycopg2
 from qiwiApi import send_p2p
 from telegramApi import bot
-
 from sqlalchemy import create_engine
 #from db.botDeal import BotDeal
 from sqlalchemy.orm import sessionmaker
 from db.cryptoSale import CryptoSale
 from db.userBotInfo import UserBotInfo
-
 from db.settings import *
-
-
-
-
+from sqlalchemy import update
 
 
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
@@ -102,21 +97,7 @@ def to_exchange_coin(message):
             if (status == 'ok'):
                 newDeal = BotDeals(countcoins, sum_p2p, telephone, idtelegram, text)
                 session.add(newDeal)
-
-
-     
-    #уменьшать в таблице доступные монетки
-                cur = con.cursor()
-                cur.execute(
-                    "UPDATE  botdeal VALUES  ('" + str(countCoin) + "', '"
-                    + str(sum_p2p) + to_qw + str(message.from_user.id) + "');"
-                )
-
-                con.commit()
-                print("Record inserted successfully")
-
-                session.commit()
-
-    bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
+                updateDeal = update(BotDeals).where(BotDeals.id == numberforBuy).values(countCoin=countCoinAvailable - countCoin )
+                bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
 
         
