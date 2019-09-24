@@ -3,7 +3,7 @@ import telebot
 
 
 import psycopg2
-from telegramApi import bot
+from telegram_api import bot
 
 def get_informations(message):
 
@@ -20,6 +20,7 @@ def get_informations(message):
 
 
     @bot.message_handler(content_types=['text'])
+
     def send_text(message):
         if message.text == 'О нас':
             bot.send_message(message.chat.id, ' Crocc - это калево ')

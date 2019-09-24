@@ -1,13 +1,13 @@
 #купи продай и тд
 
 import psycopg2
-from qiwiApi import send_p2p
-from telegramApi import bot
+from qiwi_api import send_p2p
+from telegram_api import bot
 from sqlalchemy import create_engine
-#from db.botDeal import BotDeal
+#from db.bot_deal import BotDeal
 from sqlalchemy.orm import sessionmaker
-from db.cryptoSale import CryptoSale
-from db.userBotInfo import UserBotInfo
+from db.crypto_sale import CryptoSale
+from db.user_bot_info import UserBotInfo
 from db.settings import *
 from sqlalchemy import update
 

@@ -1,4 +1,4 @@
-from telegramApi import bot
+from telegram_api import bot
 
 import requests
 import json

@@ -1,10 +1,15 @@
 # Запрос из БД - botdeal - выводим все по айди пользователя тележки
 
 import psycopg2
-from telegramApi import bot
+from telegram_api import bot
 from sqlalchemy import create_engine
-from db.botDeal import BotDeals
+from db.bot_deal import BotDeals
 from db.settings import *
+from db.settings import *
+
+from db.user_bot_info import UserBotInfo
+
+
 
 from sqlalchemy.orm import sessionmaker
 
@@ -19,11 +24,18 @@ for r in result_set:
 '''
 # bot.send_message(message.chat.id, result_set, )
 
-for count_coins, sum_deal, telephone, id_telegram in session.query(BotDeals.count_coins, BotDeals.sum_deal,
-                                                                      BotDeals.telephone, BotDeals.id_telegram,
-                                                                      ):
-    print("nothing")
-    print(count_coins, sum_deal, telephone, id_telegram)
+
+
+
+
+
+
+keyqiwi = '14' # insert or update
+id_telegram = 'message.from_user.id'
+newUserBotInfo = UserBotInfo(keyqiwi, id_telegram)
+session.add(newUserBotInfo)
+session.commit()
+
 
 '''
 #переделаю я коннекты, переделаю

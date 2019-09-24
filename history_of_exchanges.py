@@ -1,11 +1,11 @@
 #Запрос из БД - botdeal - выводим все по айди пользователя тележки
 
 import psycopg2
-from telegramApi import bot
+from telegram_api import bot
 from sqlalchemy import create_engine
-#from db.botDeal import BotDeal
+#from db.bot_deal import BotDeal
 from sqlalchemy.orm import sessionmaker
-from db.botDeal import BotDeals
+from db.bot_deal import BotDeals
 from db.settings import *
 
 def history_of_exchanges(message):

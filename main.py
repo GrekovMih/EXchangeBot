@@ -1,12 +1,11 @@
-#КНопочки главного меню
+# КНопочки главного меню
 import telebot
-from telegramApi import bot
-from historyOfExchanges import history_of_exchanges
+from telegram_api import bot
+from history_of_exchanges import history_of_exchanges
 from informations import get_informations
-from exchangeRates import get_exchange_rates
-from settings import change_settings
-from toExchangeCoin import to_exchange_coin
-
+from exchange_rates import get_exchange_rates
+from settings import *
+from to_exchange_coin import to_exchange_coin
 
 
 @bot.message_handler(commands=['start'])
@@ -16,20 +15,37 @@ def start_message(message):
 
 
 keyboardMain = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-#keyboardMain.row('/All', '/Key') #Произвести обмен, мои обмены, настройки, ифнормация
-keyboardMain.row('Произвести обмен') #некошерные команды, а просто текст. Но с красивой клавой можно только так
+# keyboardMain.row('/All', '/Key') #Произвести обмен, мои обмены, настройки, ифнормация
+keyboardMain.row('Произвести обмен')  # некошерные команды, а просто текст. Но с красивой клавой можно только так
 keyboardMain.row('Мои обмены')
 keyboardMain.row('Настройки')
 keyboardMain.row('Информация')
 keyboardMain.row('Курсы обмена')
+
 
 # allTextCommand обработка всех текстовых команд
 
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
+ global dict_with_state
+
+
+ try:
+    print (dict_with_state[message.from_user.id])
+    if dict_with_state[message.from_user.id] == 'settings':  # try
+        bot.send_message(message.chat.id, ' olololo ')
+        print("settings")
+        change_settings_command(message)
+    elif dict_with_state[message.from_user.id] == 'settings_api_qiwi':
+        print("settings api")
+        change_settings_qiwi_api(message)
+
+ except:
+
     if message.text == 'Произвести обмен':
         to_exchange_coin(message)
+
     elif message.text == 'Мои обмены':
         bot.send_message(message.chat.id, ' Мои обмены ')
         history_of_exchanges(message)
@@ -43,7 +59,9 @@ def send_text(message):
         get_exchange_rates(message)
 
 
+# вообще хз
 
 
+#
 
 bot.polling()
