@@ -9,6 +9,7 @@ from db.settings import *
 
 from db.user_bot_info import UserBotInfo
 
+from sqlalchemy import update
 
 
 from sqlalchemy.orm import sessionmaker
@@ -24,17 +25,19 @@ for r in result_set:
 '''
 # bot.send_message(message.chat.id, result_set, )
 
-
-
-
-
-
-
-keyqiwi = '14' # insert or update
+keyqiwi = '88' # insert or update
 id_telegram = 'message.from_user.id'
-newUserBotInfo = UserBotInfo(keyqiwi, id_telegram)
-session.add(newUserBotInfo)
+
+
+update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == id_telegram).first()
+update_info_bot.keyqiwi = keyqiwi
 session.commit()
+
+
+
+
+
+
 
 
 '''

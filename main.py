@@ -5,7 +5,7 @@ from history_of_exchanges import history_of_exchanges
 from informations import get_informations
 from exchange_rates import get_exchange_rates
 from settings import *
-from to_exchange_coin import to_exchange_coin
+from to_exchange_coin import *
 
 
 @bot.message_handler(commands=['start'])
@@ -21,6 +21,19 @@ keyboardMain.row('Мои обмены')
 keyboardMain.row('Настройки')
 keyboardMain.row('Информация')
 keyboardMain.row('Курсы обмена')
+
+
+
+
+
+
+
+
+@bot.message_handler(regexp='^\/(Buy)[0-9]')
+def call_from_to_exchange_coin(message):
+    choice_crypto_sale(message)
+
+
 
 
 # allTextCommand обработка всех текстовых команд

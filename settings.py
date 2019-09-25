@@ -61,7 +61,14 @@ def change_settings_qiwi_api(message):
 
     keyqiwi = message.text # insert or update
     id_telegram = message.from_user.id
-    newUserBotInfo = UserBotInfo(keyqiwi, id_telegram)
-    session.add(newUserBotInfo)
-    session.commit()
+
+
+    try:
+        update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == id_telegram).first()
+        update_info_bot.keyqiwi = keyqiwi
+        session.commit()
+    except:
+        newUserBotInfo = UserBotInfo(keyqiwi, id_telegram)
+        session.add(newUserBotInfo)
+        session.commit()
 

@@ -12,18 +12,25 @@ from db.settings import *
 from sqlalchemy import update
 
 
+dict_with_state = {}
+
+
+
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
 def to_exchange_coin(message):
 
     bot.send_message(message.chat.id, ' Обмен валюты ')
 
-    for id, count_coins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.count_coins, CryptoSale.price,
+    for  id, countcoins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.countcoins, CryptoSale.price,
                                                                     CryptoSale.text, CryptoSale.telephone):
         print("nothing")
-        print(count_coins, price, text, telephone )
+        print(countcoins, price, text, telephone )
 
-        bot.send_message(message.chat.id, " В количеcтве " + str(count_coins) + " по цене за монету " + str(price) + "Монета -"+ str(text) +" Номер для покупки:  " + str(telephone) + "  " ,
-                 )
+        command = "/Buy" + str(id)
+        bot.send_message(message.chat.id,
+                         " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + " Монета -" + str(
+                             text) + " Номер для покупки:  " + str(telephone) + " " + command,
+                         )
 
 
 
@@ -31,8 +38,10 @@ def to_exchange_coin(message):
 
 
    #Событие после нажатия на ссылку для покупки, будет задан вопрос сколько шейкелей он хочет
-    @bot.message_handler(regexp='^\/(Buy)[0-9]')
-    def start_message(message):
+#@bot.message_handler(regexp='^\/(Buy)[0-9]')
+def choice_crypto_sale(message):
+        global dict_with_state
+
         #  global numberforBuy
 
         numberforBuy = message.text.replace("/Buy", "")
@@ -40,21 +49,25 @@ def to_exchange_coin(message):
         bot.send_message(message.chat.id, 'Введите количество монет')
         # bot.register_next_step_handler(message, numberforBuy, get_number)
 
-        bot.register_next_step_handler(message, lambda msg: request_to_qiwi(numberforBuy, msg))
+      #  bot.register_next_step_handler(message, lambda msg: request_to_qiwi(numberforBuy, msg))
+
+        dict_with_state[message.from_user.id] = numberforBuy
 
 
 #Добавить выбор платежной системы для покупки, qiwi в отдельный модуль и другие систмеы платежные(уточнить какие)  (вывод в кклаве будет, наверное)
 
 
     #Пользователь вводит сколько денех он хочет
-    @bot.message_handler(content_types=['text']) #уйдет в отдельный модуль
-    def request_to_qiwi(numberforBuy, message):
-        #   numberforBuy = message.text
 
-        #  global numberforBuy
-        print("numberforBuy")
 
-        print(numberforBuy)
+
+@bot.message_handler(content_types=['text']) #уйдет в отдельный модуль
+def request_to_qiwi(message):
+        global dict_with_state
+              
+        id_deal = dict_with_state[message.from_user.id].replace("/Buy", "")
+
+
 
         for keyqiwi, id_telegram in session.query(UserBotInfo.keyqiwi, UserBotInfo.id_telegram,
 
@@ -64,18 +77,17 @@ def to_exchange_coin(message):
 
             api_access_token = api_access_token
 
-        for id, count_coins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.count_coins, CryptoSale.price,
+        for id, countcoins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.countcoins, CryptoSale.price,
                                                                 CryptoSale.text, CryptoSale.telephone,
-                                                                ).filter(CryptoSale.id == str(numberforBuy)):
+                                                                ).filter(CryptoSale.id == str(id_deal)):
             print("nothing")
             print(count_coins, price, text, telephone)
 
             bot.send_message(message.chat.id,
-                             " В количеcтве " + str(count_coins) + " по цене за монету " + str(price) + "Монета -" + str(
-                                 text) + " Номер для покупки:  " + str(telephone) + "  ",
+                             " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + " Монета -" + str(
+                                 text) + " Номер для покупки:  " + str(telephone) + " " ,
                              )
-            countCoinAvailable = count_coins
-
+            countCoinAvailable = countcoins
 
         countCoin = message.text
 
@@ -87,8 +99,6 @@ def to_exchange_coin(message):
             sum_p2p = int(countCoin) * int(price)
             print("sum_p2p" + str(sum_p2p))
 
-            to_qw = telephone
-
             status = send_p2p('', api_access_token, telephone, '', sum_p2p, message)
 
             # ok или трабл
@@ -98,5 +108,3 @@ def to_exchange_coin(message):
                 session.add(newDeal)
                 updateDeal = update(BotDeals).where(BotDeals.id == numberforBuy).values(countCoin=countCoinAvailable - countCoin )
                 bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
-
-        

@@ -17,18 +17,18 @@ Base = declarative_base()
 class BotDeals(Base):
     __tablename__ = 'botdeal'
     id = Column(Integer, primary_key=True)
-    count_coins = Column(Integer)
-    sum_deal = Column(Integer)
+    countcoins = Column(Integer)
+    sumdeal = Column(Integer)
     telephone = Column(String)
-    id_telegram = Column(String)
+    idtelegram = Column(String)
     text = Column(String)
 
 
-    def __init__(self, count_coins, sum_deal, telephone, id_telegram, text):
-        self.count_coins = count_coins
-        self.sum_deal = sum_deal
+    def __init__(self, countcoins, sumdeal, telephone, idtelegram, text):
+        self.countcoins = countcoins
+        self.sumdeal = sumdeal
         self.telephone = telephone
-        self.id_telegram = id_telegram
+        self.idtelegram = idtelegram
         self.text = text
 
 
