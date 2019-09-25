@@ -28,11 +28,11 @@ keyboardMain.row('Курсы обмена')
 
 
 
-
+#-----------------Обмен-------------
 @bot.message_handler(regexp='^\/(Buy)[0-9]')
 def call_from_to_exchange_coin(message):
     choice_crypto_sale(message)
-
+#-----------------------------------
 
 
 
@@ -46,6 +46,8 @@ def send_text(message):
 
  try:
     print (dict_with_state[message.from_user.id])
+
+    #-----------------Настройка-------------
     if dict_with_state[message.from_user.id] == 'settings':  # try
         bot.send_message(message.chat.id, ' olololo ')
         print("settings")
@@ -53,6 +55,13 @@ def send_text(message):
     elif dict_with_state[message.from_user.id] == 'settings_api_qiwi':
         print("settings api")
         change_settings_qiwi_api(message)
+
+    #-----------------Обмен-------------
+
+    elif "Buy" in dict_with_state[message.from_user.id]:
+        request_to_qiwi(message)
+        print("request_to_qiwi")
+
 
  except:
 

@@ -10,9 +10,8 @@ from db.crypto_sale import CryptoSale
 from db.user_bot_info import UserBotInfo
 from db.settings import *
 from sqlalchemy import update
+from glob_stat import *
 
-
-dict_with_state = {}
 
 
 
@@ -44,14 +43,14 @@ def choice_crypto_sale(message):
 
         #  global numberforBuy
 
-        numberforBuy = message.text.replace("/Buy", "")
+       # numberforBuy = message.text.replace("/Buy", "")
 
         bot.send_message(message.chat.id, 'Введите количество монет')
         # bot.register_next_step_handler(message, numberforBuy, get_number)
 
       #  bot.register_next_step_handler(message, lambda msg: request_to_qiwi(numberforBuy, msg))
 
-        dict_with_state[message.from_user.id] = numberforBuy
+        dict_with_state[message.from_user.id] = message.text
 
 
 #Добавить выбор платежной системы для покупки, qiwi в отдельный модуль и другие систмеы платежные(уточнить какие)  (вывод в кклаве будет, наверное)
@@ -61,50 +60,70 @@ def choice_crypto_sale(message):
 
 
 
-@bot.message_handler(content_types=['text']) #уйдет в отдельный модуль
+#@bot.message_handler(content_types=['text']) #уйдет в отдельный модуль
 def request_to_qiwi(message):
+
+        print("qiwi qiwi to me")
+
         global dict_with_state
               
         id_deal = dict_with_state[message.from_user.id].replace("/Buy", "")
 
 
 
-        for keyqiwi, id_telegram in session.query(UserBotInfo.keyqiwi, UserBotInfo.id_telegram,
 
-                                                                ).filter(UserBotInfo.id_telegram==str(message.from_user.id)):
-            print("nothing")
-            print(keyqiwi, id_telegram)
 
-            api_access_token = api_access_token
+
+
 
         for id, countcoins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.countcoins, CryptoSale.price,
                                                                 CryptoSale.text, CryptoSale.telephone,
                                                                 ).filter(CryptoSale.id == str(id_deal)):
             print("nothing")
-            print(count_coins, price, text, telephone)
+        print(countcoins, price, text, telephone)
+        countCoinAvailable = countcoins
 
-            bot.send_message(message.chat.id,
-                             " В количеcтве " + str(countcoins) + " по цене за монету " + str(price) + " Монета -" + str(
-                                 text) + " Номер для покупки:  " + str(telephone) + " " ,
-                             )
-            countCoinAvailable = countcoins
+        for keyqiwi, id_telegram in session.query(UserBotInfo.keyqiwi, UserBotInfo.id_telegram,
+
+                                                                ).filter(UserBotInfo.id_telegram==str(message.from_user.id)):
+            print("nothing")
+        print(keyqiwi, id_telegram)
+        api_access_token = keyqiwi
+
+
+
 
         countCoin = message.text
-
-        print("countCoin" + countCoin)
 
         if (int(countCoin) <= int(countCoinAvailable)):  # проверить число ли
             print("Отлично! Работаем дальше!")
 
             sum_p2p = int(countCoin) * int(price)
-            print("sum_p2p" + str(sum_p2p))
+            print(" sum_p2p " + str(sum_p2p))
 
-            status = send_p2p('', api_access_token, telephone, '', sum_p2p, message)
+            status = send_p2p('', api_access_token, telephone, 'coin', sum_p2p, message)
+
+            print(" status " + str(status))
+
 
             # ok или трабл
 
             if (status == 'ok'):
-                newDeal = BotDeals(count_coins, sum_p2p, telephone, id_telegram, text)
+                # добавление произведенной сделки
+
+                newDeal = BotDeals(countCoin, sum_p2p, telephone, id_telegram, text)
                 session.add(newDeal)
-                updateDeal = update(BotDeals).where(BotDeals.id == numberforBuy).values(countCoin=countCoinAvailable - countCoin )
+                session.commit()
+
+                # обновление предложений
+
+                update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == id_deal).first()
+                update_info_bot.countcoins = countCoinAvailable - countCoin
+                session.commit()
+
                 bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
+            else:
+                bot.send_message(message.chat.id, 'Qiwi failed')
+        else:
+            print("all wrong")
+            bot.send_message(message.chat.id, 'All failed')

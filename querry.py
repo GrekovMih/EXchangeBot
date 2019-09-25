@@ -24,17 +24,25 @@ for r in result_set:
 
 '''
 # bot.send_message(message.chat.id, result_set, )
+def ololo():
+    keyqiwi = '1488' # insert or update
+    id_telegram = 'message.from_user.id'
 
-keyqiwi = '88' # insert or update
-id_telegram = 'message.from_user.id'
+    '''
+    update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == id_telegram).first()
+    update_info_bot.keyqiwi = keyqiwi
+    session.commit()
+    '''
 
 
-update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == id_telegram).first()
-update_info_bot.keyqiwi = keyqiwi
-session.commit()
+    newUserBotInfo = UserBotInfo(14, 88)
+    session.add(newUserBotInfo)
+    session.commit()
+    print("insert")
 
 
 
+ololo()
 
 
 

@@ -1,6 +1,4 @@
 import telebot
-from telegram_api import bot
-
 import psycopg2
 from qiwi_api import send_p2p
 from telegram_api import bot
@@ -11,10 +9,10 @@ from db.crypto_sale import CryptoSale
 from db.user_bot_info import UserBotInfo
 from db.settings import *
 from sqlalchemy import update
-from db.settings import *
+from glob_stat import *
 
 
-dict_with_state = {}
+
 
 
 
@@ -54,21 +52,31 @@ def change_settings_command(message):
 
 
 def change_settings_qiwi_api(message):
-
+    global dict_with_state
+    dict_with_state[message.from_user.id] = '' # button for main menu and revert
     print("hop hop")
 
     bot.send_message(message.chat.id, ' Write in db ')
 
-    keyqiwi = message.text # insert or update
-    id_telegram = message.from_user.id
+    newUserBotInfo = UserBotInfo(message.text, message.from_user.id)
+    session.add(newUserBotInfo)
+    session.commit()
 
+    print(message.text)
+    print(message.from_user.id)
+    dict_with_state = {}
 
+''' DOIT:
     try:
-        update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == id_telegram).first()
-        update_info_bot.keyqiwi = keyqiwi
+        update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == message.from_user.id).first()
+        update_info_bot.keyqiwi = message.text
         session.commit()
+        print("update")
+
     except:
-        newUserBotInfo = UserBotInfo(keyqiwi, id_telegram)
+        newUserBotInfo = UserBotInfo(message.text, message.from_user.id)
         session.add(newUserBotInfo)
         session.commit()
+        print("insert")
+'''
 
