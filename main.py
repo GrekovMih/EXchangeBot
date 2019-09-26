@@ -8,10 +8,35 @@ from settings import *
 from to_exchange_coin import *
 
 
+
+
+def text_command(message):
+    if message.text == 'Произвести обмен':
+        to_exchange_coin(message)
+
+    elif message.text == 'Мои обмены':
+        bot.send_message(message.chat.id, ' Мои обмены ')
+        history_of_exchanges(message)
+    elif message.text == 'Настройки':
+        change_settings(message)
+    if message.text == 'Информация':
+        bot.send_message(message.chat.id, ' Информация ')
+        get_informations(message)
+
+    elif message.text == 'Курсы обмена':
+        get_exchange_rates(message)
+
+
+
+
+
+
+
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, 'Добро пожаловать в телеграм бот cracc', reply_markup=keyboardMain)
     bot.send_message(message.chat.id, ' working ')
+    dict_with_state[message.from_user.id] = ''
 
 
 keyboardMain = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -62,23 +87,12 @@ def send_text(message):
         request_to_qiwi(message)
         print("request_to_qiwi")
 
+    else:
+        text_command(message)
 
  except:
+     text_command(message)
 
-    if message.text == 'Произвести обмен':
-        to_exchange_coin(message)
-
-    elif message.text == 'Мои обмены':
-        bot.send_message(message.chat.id, ' Мои обмены ')
-        history_of_exchanges(message)
-    elif message.text == 'Настройки':
-        change_settings(message)
-    if message.text == 'Информация':
-        bot.send_message(message.chat.id, ' Информация ')
-        get_informations(message)
-
-    elif message.text == 'Курсы обмена':
-        get_exchange_rates(message)
 
 
 # вообще хз

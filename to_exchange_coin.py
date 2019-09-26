@@ -32,10 +32,6 @@ def to_exchange_coin(message):
                          )
 
 
-
-
-
-
    #Событие после нажатия на ссылку для покупки, будет задан вопрос сколько шейкелей он хочет
 #@bot.message_handler(regexp='^\/(Buy)[0-9]')
 def choice_crypto_sale(message):
@@ -62,20 +58,10 @@ def choice_crypto_sale(message):
 
 #@bot.message_handler(content_types=['text']) #уйдет в отдельный модуль
 def request_to_qiwi(message):
-
         print("qiwi qiwi to me")
-
         global dict_with_state
-              
+
         id_deal = dict_with_state[message.from_user.id].replace("/Buy", "")
-
-
-
-
-
-
-
-
         for id, countcoins, price, text, telephone in session.query(CryptoSale.id, CryptoSale.countcoins, CryptoSale.price,
                                                                 CryptoSale.text, CryptoSale.telephone,
                                                                 ).filter(CryptoSale.id == str(id_deal)):
@@ -90,9 +76,6 @@ def request_to_qiwi(message):
         print(keyqiwi, id_telegram)
         api_access_token = keyqiwi
 
-
-
-
         countCoin = message.text
 
         if (int(countCoin) <= int(countCoinAvailable)):  # проверить число ли
@@ -100,14 +83,10 @@ def request_to_qiwi(message):
 
             sum_p2p = int(countCoin) * int(price)
             print(" sum_p2p " + str(sum_p2p))
-
             status = send_p2p('', api_access_token, telephone, 'coin', sum_p2p, message)
-
             print(" status " + str(status))
 
-
             # ok или трабл
-
             if (status == 'ok'):
                 # добавление произведенной сделки
 
@@ -127,3 +106,4 @@ def request_to_qiwi(message):
         else:
             print("all wrong")
             bot.send_message(message.chat.id, 'All failed')
+

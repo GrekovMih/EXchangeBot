@@ -13,6 +13,7 @@ def get_informations(message):
     keyboardInformations.row('О нас')  # некошерные команды, а просто текст. Но с красивой клавой можно только так
     keyboardInformations.row('Поддержка')
     keyboardInformations.row('Главное меню')
+    keyboardInformations.row('/start')
 
 
 

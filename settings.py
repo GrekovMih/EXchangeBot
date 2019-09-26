@@ -13,10 +13,6 @@ from glob_stat import *
 
 
 
-
-
-
-
 def change_settings(message):
     global dict_with_state
 
@@ -28,6 +24,7 @@ def change_settings(message):
     keyboardSettings.row('Ввести ключ API от QIWI')  # некошерные команды, а просто текст. Но с красивой клавой можно только так
     keyboardSettings.row('Мои адреса')
     keyboardSettings.row('Уведомления')
+    keyboardSettings.row('/start')
 
 
 
@@ -64,7 +61,6 @@ def change_settings_qiwi_api(message):
 
     print(message.text)
     print(message.from_user.id)
-    dict_with_state = {}
 
 ''' DOIT:
     try:
