@@ -13,7 +13,7 @@ session = Session()
 Base = declarative_base()
 class CryptoSale(Base):
     __tablename__ = 'cryptosale'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, autoincrement=True, primary_key=True)
     countcoins = Column(Integer)
     price = Column(Integer)
     text = Column(String)

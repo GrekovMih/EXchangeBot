@@ -12,6 +12,19 @@ def history_of_exchanges(message):
 
     bot.send_message(message.chat.id, ' История операций ')
 
+
+
+    for countcoins, sumdeal, telephone, idtelegram in session.query(BotDeals.countcoins, BotDeals.sumdeal,
+                                                                    BotDeals.telephone, BotDeals.idtelegram,
+                                                                    ).filter(BotDeals.idtelegram==message.from_user.id):
+        print("nothing")
+        print(countcoins, sumdeal, telephone, idtelegram)
+        bot.send_message(message.chat.id, " Купили " + str(countcoins) + " в количеcтве " + str(
+            countcoins) + " за  " + str(sumdeal) + " рублей  " + " у  " + str(telephone),
+                         )
+
+
+    '''
     for countcoins, sumdeal, telephone, idtelegram in session.query(BotDeals.countcoins, BotDeals.sumdeal,
                                                                     BotDeals.telephone, BotDeals.idtelegram,
                                                                     ):
@@ -20,4 +33,6 @@ def history_of_exchanges(message):
         bot.send_message(message.chat.id, str(idtelegram) + " Купили " + str(countcoins) + " в количеcтве " + str(
             countcoins) + " за  " + str(sumdeal) + " рублей  " + " у  " + str(telephone),
                          )
+                         
+    '''
 

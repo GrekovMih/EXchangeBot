@@ -32,7 +32,7 @@ def text_command(message):
 
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start','menu'])
 def start_message(message):
     bot.send_message(message.chat.id, 'Добро пожаловать в телеграм бот cracc', reply_markup=keyboardMain)
     bot.send_message(message.chat.id, ' working ')
@@ -54,7 +54,7 @@ keyboardMain.row('Курсы обмена')
 
 
 #-----------------Обмен-------------
-@bot.message_handler(regexp='^\/(Buy)[0-9]')
+@bot.message_handler(regexp='^\/(Buy)[0-9]+$')
 def call_from_to_exchange_coin(message):
     choice_crypto_sale(message)
 #-----------------------------------

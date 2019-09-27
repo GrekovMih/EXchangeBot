@@ -17,9 +17,9 @@ session = Session()
 Base = declarative_base()
 class UserBotInfo(Base):
     __tablename__ = 'userbotinfo'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, autoincrement=True, primary_key=True)
     keyqiwi = Column(String)
-    id_telegram = Column(String)
+    id_telegram = Column(String, unique=True)
 
 
 

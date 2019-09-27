@@ -16,7 +16,7 @@ session = Session()
 Base = declarative_base()
 class BotDeals(Base):
     __tablename__ = 'botdeal'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, autoincrement=True, primary_key=True)
     countcoins = Column(Integer)
     sumdeal = Column(Integer)
     telephone = Column(String)

@@ -12,9 +12,6 @@ from db.settings import *
 from sqlalchemy import update
 from glob_stat import *
 
-
-
-
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
 def to_exchange_coin(message):
 
@@ -78,7 +75,21 @@ def request_to_qiwi(message):
 
         countCoin = message.text
 
-        if (int(countCoin) <= int(countCoinAvailable)):  # проверить число ли
+        #------бронькаем нужное количество монеточек--------
+
+        #может быть фейл, тип во время работы ребутнется и не вернется обратно заброненное, но такая хуйня может быть в любой момент как бы и всегда будет плохо
+
+        update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == id_deal).first()
+        update_info_bot.countcoins = countCoinAvailable - countCoin
+        session.commit()
+
+
+
+
+        # ---------------------------------------------------
+
+
+        if (int(countCoin) <= int(countCoinAvailable) + int(countCoin)):  # проверить число ли
             print("Отлично! Работаем дальше!")
 
             sum_p2p = int(countCoin) * int(price)
@@ -88,17 +99,15 @@ def request_to_qiwi(message):
 
             # ok или трабл
             if (status == 'ok'):
+
+                print("status - OK")
                 # добавление произведенной сделки
 
                 newDeal = BotDeals(countCoin, sum_p2p, telephone, id_telegram, text)
                 session.add(newDeal)
                 session.commit()
 
-                # обновление предложений
 
-                update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == id_deal).first()
-                update_info_bot.countcoins = countCoinAvailable - countCoin
-                session.commit()
 
                 bot.send_message(message.chat.id, 'Деньги были переведены на счет продавца')
             else:
@@ -107,3 +116,11 @@ def request_to_qiwi(message):
             print("all wrong")
             bot.send_message(message.chat.id, 'All failed')
 
+        if (status != 'ok'):
+            update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == id_deal).first()
+            update_info_bot.countcoins = countCoinAvailable
+            session.commit()
+
+
+
+        dict_with_state[message.from_user.id] = ''

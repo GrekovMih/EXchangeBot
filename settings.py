@@ -24,7 +24,7 @@ def change_settings(message):
     keyboardSettings.row('Ввести ключ API от QIWI')  # некошерные команды, а просто текст. Но с красивой клавой можно только так
     keyboardSettings.row('Мои адреса')
     keyboardSettings.row('Уведомления')
-    keyboardSettings.row('/start')
+    keyboardSettings.row('/menu')
 
 
 
@@ -55,14 +55,8 @@ def change_settings_qiwi_api(message):
 
     bot.send_message(message.chat.id, ' Write in db ')
 
-    newUserBotInfo = UserBotInfo(message.text, message.from_user.id)
-    session.add(newUserBotInfo)
-    session.commit()
 
-    print(message.text)
-    print(message.from_user.id)
 
-''' DOIT:
     try:
         update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == message.from_user.id).first()
         update_info_bot.keyqiwi = message.text
@@ -74,5 +68,8 @@ def change_settings_qiwi_api(message):
         session.add(newUserBotInfo)
         session.commit()
         print("insert")
-'''
+
+    print(message.text)
+    print(message.from_user.id)
+    dict_with_state[message.from_user.id] = ''
 
