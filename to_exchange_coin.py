@@ -8,9 +8,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db.crypto_sale import CryptoSale
 from db.user_bot_info import UserBotInfo
-from db.settings import *
+from db.settings_db import *
 from sqlalchemy import update
 from glob_stat import *
+from db.bot_deal import BotDeals
+
 
 # выводятся все варианты продажи крипты, в каждом сообщении будет кликабельная "ссылка" для покупки ее
 def to_exchange_coin(message):
@@ -79,8 +81,21 @@ def request_to_qiwi(message):
 
         #может быть фейл, тип во время работы ребутнется и не вернется обратно заброненное, но такая хуйня может быть в любой момент как бы и всегда будет плохо
 
-        update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == id_deal).first()
-        update_info_bot.countcoins = countCoinAvailable - countCoin
+        print("broniruyu motrherfucke")
+        '''
+        update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == int(id_deal)).first()
+        update_info_bot.countcoins = int(countCoinAvailable) - int(countCoin)
+        session.commit()
+
+        result = db.session.query(User.money).with_for_update().filter_by(id=userid).first()
+        money = result[0]
+        user.money = money - 0.1
+        '''
+
+
+
+        update_info_bot = session.query(CryptoSale).with_for_update(of=CryptoSale).filter(CryptoSale.id == int(id_deal)).first()
+        update_info_bot.countcoins = int(countCoinAvailable) - int(countCoin)
         session.commit()
 
 
@@ -88,13 +103,14 @@ def request_to_qiwi(message):
 
         # ---------------------------------------------------
 
-
-        if (int(countCoin) <= int(countCoinAvailable) + int(countCoin)):  # проверить число ли
+        status =''
+        if (int(countCoin) <= int(countCoinAvailable)):  # проверить число ли
             print("Отлично! Работаем дальше!")
 
             sum_p2p = int(countCoin) * int(price)
             print(" sum_p2p " + str(sum_p2p))
-            status = send_p2p('', api_access_token, telephone, 'coin', sum_p2p, message)
+           # status = send_p2p('', api_access_token, telephone, 'coin', sum_p2p, message) qiwi qiwi to me
+            status = 'ok'
             print(" status " + str(status))
 
             # ok или трабл
@@ -103,7 +119,9 @@ def request_to_qiwi(message):
                 print("status - OK")
                 # добавление произведенной сделки
 
-                newDeal = BotDeals(countCoin, sum_p2p, telephone, id_telegram, text)
+                newDeal = BotDeals(int(countCoin), int(sum_p2p), str(telephone), str(id_telegram), str(text))
+                #newDeal = BotDeals(44, 988, 'din don din', 424, '(text)')
+
                 session.add(newDeal)
                 session.commit()
 
@@ -117,9 +135,11 @@ def request_to_qiwi(message):
             bot.send_message(message.chat.id, 'All failed')
 
         if (status != 'ok'):
-            update_info_bot = session.query(CryptoSale).filter(CryptoSale.id == id_deal).first()
-            update_info_bot.countcoins = countCoinAvailable
+
+            update_info_bot = session.query(CryptoSale).with_for_update(of=CryptoSale).filter(CryptoSale.id == int(id_deal)).first()
+            update_info_bot.countcoins = update_info_bot.countcoins + int(countCoin)
             session.commit()
+
 
 
 

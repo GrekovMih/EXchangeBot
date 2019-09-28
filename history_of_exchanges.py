@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 #from db.bot_deal import BotDeal
 from sqlalchemy.orm import sessionmaker
 from db.bot_deal import BotDeals
-from db.settings import *
+from db.settings_db import *
 
 def history_of_exchanges(message):
 

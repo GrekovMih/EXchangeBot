@@ -1,15 +1,8 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-db_string = "postgresql://postgres:45091847@localhost/cracc"
-db = create_engine(db_string)
-Session = sessionmaker(bind=db)
-session = Session()
-
+from db.settings_db import *
 
 
 

@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
-
 import psycopg2
 from sqlalchemy import create_engine
-from db.bot_deal import BotDeals
 from sqlalchemy.orm import sessionmaker
 
 SERVER_PORT = 9003

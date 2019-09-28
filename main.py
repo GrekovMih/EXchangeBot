@@ -46,6 +46,7 @@ keyboardMain.row('Мои обмены')
 keyboardMain.row('Настройки')
 keyboardMain.row('Информация')
 keyboardMain.row('Курсы обмена')
+keyboardMain.row('/menu')
 
 
 

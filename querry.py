@@ -4,8 +4,10 @@ import psycopg2
 from telegram_api import bot
 from sqlalchemy import create_engine
 from db.bot_deal import BotDeals
-from db.settings import *
-from db.settings import *
+from db.settings_db import *
+from db.crypto_sale import CryptoSale
+
+
 
 from db.user_bot_info import UserBotInfo
 
@@ -34,19 +36,70 @@ def ololo():
     session.commit()
     '''
 
-
+'''
     newUserBotInfo = UserBotInfo(14, 88)
     session.add(newUserBotInfo)
     session.commit()
     print("insert")
+'''
 
 
+#ololo()
 
-ololo()
+'''
+newDeal = BotDeals(14, 88, 'din din', 42, '(text)')
+session.add(newDeal)
+session.commit()
+'''
+
+update_info_bot = session.query(UserBotInfo).with_for_update(of=UserBotInfo).filter(UserBotInfo.id_telegram == '14').first()
+update_info_bot.keyqiwi = '99'
+session.commit()
+
+'''
+try:
+    update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == '14').first()
+    update_info_bot.keyqiwi = '99'
+    session.commit()
+    print("update")
+
+except:
+
+    try:
+        newUserBotInfo = UserBotInfo('message.text', '14')
+        session.add(newUserBotInfo)
+        session.commit()
+        print("insert")
+
+    except:
+
+        print("failed db")
+
+'''
+
+'''
+newUserBotInfo = UserBotInfo(1, 88)
+session.add(newUserBotInfo)
+session.commit()
+print("insert")
 
 
+newUserBotInfo = UserBotInfo(4, 88)
+session.add(newUserBotInfo)
+session.commit()
+print("insert")
 
 
+newUserBotInfo = UserBotInfo(8, 88)
+session.add(newUserBotInfo)
+session.commit()
+print("insert")
+
+newUserBotInfo = UserBotInfo(1, 88)
+session.add(newUserBotInfo)
+session.commit()
+print("insert")
+'''
 
 '''
 #переделаю я коннекты, переделаю

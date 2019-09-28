@@ -5,13 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-db_string = "postgresql://postgres:45091847@localhost/cracc"
-db = create_engine(db_string)
-Session = sessionmaker(bind=db)
-session = Session()
-
-
+from db.settings_db import *
 
 
 Base = declarative_base()
@@ -19,7 +13,7 @@ class UserBotInfo(Base):
     __tablename__ = 'userbotinfo'
     id = Column(Integer, autoincrement=True, primary_key=True)
     keyqiwi = Column(String)
-    id_telegram = Column(String, unique=True)
+    id_telegram = Column(Integer, unique=True)
 
 
 

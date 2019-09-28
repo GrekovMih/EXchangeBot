@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db.crypto_sale import CryptoSale
 from db.user_bot_info import UserBotInfo
-from db.settings import *
+from db.settings_db import *
 from sqlalchemy import update
 from glob_stat import *
 
@@ -58,16 +58,24 @@ def change_settings_qiwi_api(message):
 
 
     try:
-        update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == message.from_user.id).first()
-        update_info_bot.keyqiwi = message.text
+        update_info_bot = session.query(UserBotInfo).filter(UserBotInfo.id_telegram == str(message.from_user.id)).first()
+        update_info_bot.keyqiwi = str(message.text)
         session.commit()
         print("update")
 
     except:
-        newUserBotInfo = UserBotInfo(message.text, message.from_user.id)
-        session.add(newUserBotInfo)
-        session.commit()
-        print("insert")
+
+        try:
+            newUserBotInfo = UserBotInfo(str(message.text), str(message.from_user.id))
+            session.add(newUserBotInfo)
+            session.commit()
+            print("insert")
+
+        except:
+
+            print("failed db")
+
+
 
     print(message.text)
     print(message.from_user.id)
