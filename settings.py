@@ -31,6 +31,7 @@ def change_settings(message):
     bot.send_message(message.chat.id, ' Settings ', reply_markup=keyboardSettings)
 
     dict_with_state[message.from_user.id] = 'settings'
+    conn.hmset("pythonDict", dict_with_state)  # redis
 
 
 def change_settings_command(message):
@@ -80,4 +81,5 @@ def change_settings_qiwi_api(message):
     print(message.text)
     print(message.from_user.id)
     dict_with_state[message.from_user.id] = ''
+    conn.hmset("pythonDict", dict_with_state)  # redis
 

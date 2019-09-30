@@ -27,10 +27,10 @@ def text_command(message):
         get_exchange_rates(message)
 
 
-
-
-
-
+try:
+    dict_with_state = conn.hgetall("pythonDict") #redis
+except:
+    print("no dict")
 
 @bot.message_handler(commands=['start','menu'])
 def start_message(message):

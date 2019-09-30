@@ -11,6 +11,8 @@ from db.user_bot_info import UserBotInfo
 from db.settings_db import *
 from sqlalchemy import update
 from glob_stat import *
+from reddis_settings import *
+
 from db.bot_deal import BotDeals
 
 
@@ -46,6 +48,8 @@ def choice_crypto_sale(message):
       #  bot.register_next_step_handler(message, lambda msg: request_to_qiwi(numberforBuy, msg))
 
         dict_with_state[message.from_user.id] = message.text
+
+        conn.hmset("pythonDict", dict_with_state) #redis
 
 
 #Добавить выбор платежной системы для покупки, qiwi в отдельный модуль и другие систмеы платежные(уточнить какие)  (вывод в кклаве будет, наверное)
@@ -144,3 +148,4 @@ def request_to_qiwi(message):
 
 
         dict_with_state[message.from_user.id] = ''
+        conn.hmset("pythonDict", dict_with_state)  # redis
